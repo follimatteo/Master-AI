@@ -135,7 +135,33 @@ node.add_string(
 gecode = Solver.lookup("gecode")
 # Create an Instance of the n-Queens model for Gecode
 instance = Instance(gecode, node)
-result = instance.solve(all_solutions=True)
+result = instance.solve()
 # Output the array q
-for sol in result.solution:
-    print(sol)
+print(result)
+
+
+"""
+Imporre che un array di 5 interi sia costituito da
+valori in ordine crescente.
+"""
+
+M1 = Model()
+M1.add_string(
+    '''
+    int: n;
+    array[1..n] of var 1..n: Q;
+
+    constraint forall(i in 1..(n-1))(Q[i]<Q[i+1]);
+    solve satisfy;
+
+    '''
+)
+
+# Find the MiniZinc solver configuration for Gecode
+gecode = Solver.lookup("gecode")
+# Create an Instance of the n-Queens model for Gecode
+instance = Instance(gecode, M1)
+instance['n'] = 5
+result = instance.solve()
+# Output the array q
+print(result)
