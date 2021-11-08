@@ -1,3 +1,4 @@
+import time
 from minizinc import Instance, Model, Solver
 
 # Load n-Queens model from file
@@ -10,6 +11,7 @@ rulers.add_string(
 
     include "alldifferent.mzn";
 
+    %constraint q[1]= 0;
     constraint alldifferent(q);
     constraint forall(i in 1..(n-1))(q[i]<q[i+1]);
     constraint alldifferent([q[i]-q[j]|i,j in 1..n where i<j]);
@@ -17,14 +19,14 @@ rulers.add_string(
     solve minimize max(q);
     '''
 )
-#constraint alldifferent(i in 1..(n-1), j in (i+1)..n)(q[i]+q[j]);
-
 
 # Find the MiniZinc solver configuration for Gecode
 gecode = Solver.lookup("gecode")
 # Create an Instance of the n-Queens model for Gecode
 instance = Instance(gecode, rulers)
 # Assign 4 to n
-instance["n"] = 28
+instance["n"] = 15
+start_time = time.time()
 result = instance.solve()
+print("Resolved in --- %s seconds ---" % (time.time() - start_time))
 print(result)
