@@ -47,7 +47,7 @@ if 'raw' in MODELS or MODELS =='all':
                 forall(j in i+1..n)(
                     abs(q[i]-q[j])!=abs(i-j)
                 )
-        )
+        );
         '''
     )
 
@@ -121,10 +121,11 @@ if 'alldiff' in MODELS or MODELS =='all':
 #   2' : fzn_lex_lesseq_bool([ qb[i,j] | i,j in 1..n ], [ qb[j,i] | i,j in 1..n ])  ----> THIS BREAK SIMMITRY WITH LEXOGRAPIC ORDER RESPECT TO DIAGONAL?
 #
 #
+
 if 'sym' in MODELS or MODELS =='all':
     nqueens = Model()
     nqueens.add_string(
-        '''
+        f'''
         int: n; % The number of queens.
 
         array[1..n,1..n] of var bool: qb;
@@ -149,6 +150,8 @@ if 'sym' in MODELS or MODELS =='all':
             /\  fzn_lex_lesseq_bool(array1d(qb), [ qb[j,i] | i in reverse(1..n), j in 1..n ])
             /\  fzn_lex_lesseq_bool(array1d(qb), [ qb[i,j] | i,j in reverse(1..n) ])
             /\  fzn_lex_lesseq_bool(array1d(qb), [ qb[j,i] | i,j in reverse(1..n) ]);
+
+        solve :: int_search(qb, input_order, indomain_min) satisfy;
         '''
     )
 
