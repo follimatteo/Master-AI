@@ -94,7 +94,7 @@ if 'alldiff' in MODELS or MODELS =='all':
         constraint alldifferent([ q[i] - i | i in 1..n]); % upwards+downwards
 
         % search
-        solve :: int_search(q, dom_w_deg, indomain_min) satisfy;
+        solve :: int_search(q, first_fail, indomain_random) satisfy;
         '''
     )
 
@@ -110,6 +110,7 @@ if 'alldiff' in MODELS or MODELS =='all':
     print("\n")
     print("Alldiff model:")
     print("Resolved in --- %s seconds ---" % (time.time() - start_time))
+    print(f"Number of failures: {result.statistics['failures']}")
     if allsol:
         print(f'Number of solution: {len(result)}')
         if print_board:
