@@ -23,6 +23,8 @@ instance = Instance(gecode, nqueens)
 # Assign 4 to n
 instance["n"] = 4
 result = instance.solve()
+print("\n")
+print("NQueens:")
 # Output the array q
 print(result["q"])
 
@@ -60,9 +62,14 @@ gecode = Solver.lookup("gecode")
 # Create an Instance of the n-Queens model for Gecode
 instance = Instance(gecode, cake)
 result = instance.solve()
+print("\n")
+print("Cake problem:")
 # Output the array q
 print(result)
 
+
+#
+#
 
 model = Model()
 model.add_string(
@@ -86,6 +93,8 @@ instance["A"] = range(3, 8)  # MiniZinc: 3..8
 instance["B"] = {4, 3, 2, 1, 0}  # MiniZinc: {4, 3, 2, 1, 0}
 
 result = instance.solve()
+print("\n")
+print("Problem:")
 print(result["X"])  # range(0, 5)
 assert isinstance(result["X"], range)
 print(result["Y"])  # {0, 2, 4}
@@ -136,6 +145,8 @@ gecode = Solver.lookup("gecode")
 # Create an Instance of the n-Queens model for Gecode
 instance = Instance(gecode, node)
 result = instance.solve()
+print("\n")
+print("8 Nodes problem:")
 # Output the array q
 print(result)
 
@@ -163,5 +174,39 @@ gecode = Solver.lookup("gecode")
 instance = Instance(gecode, M1)
 instance['n'] = 5
 result = instance.solve()
+print("\n")
+print("growing value problem:")
 # Output the array q
+print(result)
+
+
+# Scheduling example:
+
+S1 = Model()
+S1.add_string(
+    '''
+    include "cumulative.mzn";
+
+    array[1..4] of var 1..12: S;
+
+    array[1..4] of int: D = [6,2,4,3];
+    array[1..4] of int: M =[3,1,2,2];
+
+    constraint cumulative(S, D, M, 4);
+    constraint S[1]<=S[3];
+
+    constraint forall(i in 1..4)(S[i]+D[i]<=12);
+    solve satisfy;
+
+    '''
+)
+
+# Find the MiniZinc solver configuration for Gecode
+gecode = Solver.lookup("gecode")
+# Create an Instance of the n-Queens model for Gecode
+instance = Instance(gecode, S1)
+result = instance.solve()
+# Output the array q
+print("\n")
+print("Solving Scheduling problem:")
 print(result)
