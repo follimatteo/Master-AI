@@ -1,0 +1,38 @@
+% pwp base case
+
+% import for global constraints
+include "globals.mzn";
+
+% paper roll dimensions
+int: W;
+int: H;
+
+% number of necessary pieces of paper to cut off
+int: n;
+set of int: NPIECES = 1..n;
+
+% dimension of each piece of paper
+array[NPIECES] of int: dx;
+array[NPIECES] of int: dy;
+
+% variables
+array[NPIECES] of var int: ox;
+array[NPIECES] of var int: oy;
+
+
+% origins domain constraints
+constraint forall(i in NPIECES)
+                    ((ox[i] >= 0 /\ ox[i] < W) /\ (oy[i] >= 0 /\ oy[i] < H));
+
+% non-overlap constraint
+constraint diffn(ox,oy, dx, dy);
+
+
+% each piece must fit in the paper roll
+constraint forall(i in NPIECES)
+                  (((dx[i] + ox[i]) <= W) /\ ((dy[i] + oy[i]) <= H));
+
+
+% implied cumulative constraints
+constraint cumulative(ox, dx, dy, H);
+constraint cumulative(oy, dy, dx, W);

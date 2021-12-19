@@ -1,0 +1,32 @@
+% pwp base case
+
+  % import for global constraints
+  include "globals.mzn";
+
+  % paper roll dimensions
+  int: W;
+  int: H;
+
+  % number of necessary pieces of paper to cut off
+  int: n;
+  set of int: NPIECES = 1..n;
+
+  % dimension of each piece of paper
+  array[NPIECES] of int: dx;
+  array[NPIECES] of int: dy;
+
+  % variables
+  array[NPIECES] of var int: ox;
+  array[NPIECES] of var int: oy;
+
+  array[1..W,1..H] of var int: box;
+
+  constraint
+      forall(i in 1..n)(
+          forall(x in 0..dx[i]-1)(
+              forall(y in 0..dy[i]-1)(
+                  (box[ox[i]+x, oy[i]+y] == i))));
+
+  constraint
+      lex_lesseq(array1d(box), [box[i,j] | i in reverse(1..W), j in 1..H])
+      /\ lex_lesseq(array1d(box), [box[i,j] | i in 1..W, j in reverse(1..H)]);
