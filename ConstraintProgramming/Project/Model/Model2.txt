@@ -16,23 +16,41 @@ array[NPIECES] of int: dx;
 array[NPIECES] of int: dy;
 
 % variables
-array[NPIECES] of var int: ox;
-array[NPIECES] of var int: oy;
+array[NPIECES, NPIECES] of var int: o;
+
+% useful constants
+int: x = 1;
+int: y = 2;
 
 
 % origins domain constraints
 constraint forall(i in NPIECES)
-                    ((ox[i] >= 0 /\ ox[i] < W) /\ (oy[i] >= 0 /\ oy[i] < H));
+                    ((o[i,x] > 0 /\ o[i,x] <= W) /\ (o[i,y] > 0 /\ o[i,y] <= H));
 
 % non-overlap constraint
-constraint diffn(ox,oy, dx, dy);
+constraint diffn(o[..,x],o[..,y], dx, dy);
 
 
 % each piece must fit in the paper roll
 constraint forall(i in NPIECES)
-                  (((dx[i] + ox[i]) <= W) /\ ((dy[i] + oy[i]) <= H));
+                  (((dx[i] + o[i,x]-1) <= W) /\ ((dy[i] + o[i,y]-1) <= H));
 
 
 % implied cumulative constraints
-constraint cumulative(ox, dx, dy, H);
-constraint cumulative(oy, dy, dx, W);
+constraint cumulative(o[..,x], dx, dy, H);
+constraint cumulative(o[..,y], dy, dx, W);
+
+constraint
+  let {
+    array[1..W,1..H] of var 1..n: box;
+    } in forall(xx in 1..W, yy in 1..H, i in NPIECES)(box[xx,yy]==i <-> (o[i,x]<=xx /\ xx<o[i,x]+dx[i] /\ o[i,y]<=yy /\ yy<o[i,y]+dy[i]))
+          /\  lex_lesseq(array1d(box), [box[i_,j_] | i_ in reverse(1..W), j_ in 1..H])
+          /\  lex_lesseq(array1d(box), [box[i_,j_] | i_ in 1..W, j_ in reverse(1..H)]);
+
+
+% search
+ann:search_ann;
+search_ann = int_search(o, first_fail, indomain_split);
+%search_ann = int_search(o, dom_w_deg, indomain_split);
+%search_ann = int_search(o, most_constrained, indomain_split);
+solve :: search_ann satisfy;

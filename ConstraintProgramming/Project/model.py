@@ -32,8 +32,10 @@ for i, f in enumerate(files):
     time.append(r.statistics['solveTime'].total_seconds())
     fail.append(r.statistics['failures'])
 
-    if r.statistics['solveTime'].total_seconds()>timeout:
+    if time[-1]>timeout-10:
         break
 
-
-print_history(data, time, fail)
+print(size)
+print(time)
+print(fail)
+print_history(size, time, fail)
