@@ -7,7 +7,7 @@ import os
 
 timeout = 300
 
-model_p = 'Model/Model1.txt'
+model_p = 'Model/Model2.txt'
 data_p = 'Instances/'
 
 files = os.listdir(data_p)
