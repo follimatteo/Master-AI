@@ -7,7 +7,7 @@ import os
 
 timeout = 300
 
-model_p = 'Model/Model2.txt'
+model_p = 'Model/Model3.txt'
 data_p = 'Instances/'
 
 files = os.listdir(data_p)
@@ -18,13 +18,13 @@ fail = []
 
 for i, f in enumerate(files):
 
-    print(f'Working on model {i}')
+    print(f'Working with size: {i+8}')
     print('\n')
 
     model = load_model(model_p)
     data = txt_to_data(data_p+f)
 
-    r = evaluate_model(model, data)
+    r = evaluate_model(model, data, False,  timeout)
 
 
 
