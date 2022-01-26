@@ -18,10 +18,6 @@ set of int: NPIECES = 1..n;
 array[NPIECES] of int: dx;
 array[NPIECES] of int: dy;
 
-% to deal with rotation
-array[NPIECES] of var 0..W: ddx;
-array[NPIECES] of var 0..H: ddy;
-
 % variables
 array[NPIECES] of var 0..(W-min_dx): ox;
 array[NPIECES] of var 0..(H-min_dy): oy;
@@ -29,18 +25,15 @@ array[NPIECES] of var 0..(H-min_dy): oy;
 constraint ox[1]=0;
 constraint oy[1]=0;
 
-constraint forall (i in NPIECES) (ox[i] + ddx[i] <=W);
-constraint forall (i in NPIECES) (oy[i] + ddy[i] <=H);
-
-%constraint used to swap dx, dy
-constraint forall (i in NPIECES)((ddx[i] == dx[i] /\ ddy[i] == dy[i]) \/ (ddx[i] == dy[i] /\ ddy[i] == dx[i]) );
+constraint forall (i in NPIECES) (ox[i] + dx[i] <=W);
+constraint forall (i in NPIECES) (oy[i] + dy[i] <=H);
 
 % non-overlap constraint
-constraint diffn(ox, oy, ddx, ddy);
+constraint diffn(ox, oy, dx, dy);
 
 % implied cumulative constraints
-constraint cumulative(oy, ddy, ddx, W);
-constraint cumulative(ox, ddx, ddy, H);
+constraint cumulative(oy, dy, dx, W);
+constraint cumulative(ox, dx, dy, H);
 
 %breaking simmetry
 constraint lex_lesseq(ox,reverse(ox))

@@ -6,6 +6,8 @@
   % paper roll dimensions
   int: W;
   int: H;
+  int: min_dx;
+  int: min_dy;
 
   % number of necessary pieces of paper to cut off
   int: n;
@@ -16,10 +18,14 @@
   array[NPIECES] of int: dy;
 
   % variables
-  array[NPIECES] of var int: ox;
-  array[NPIECES] of var int: oy;
+  array[NPIECES] of var 0..(W-min_dx): ox;
+  array[NPIECES] of var 0..(H-min_dy): oy;
 
   array[1..W,1..H] of var int: box;
+
+  constraint forall(i in NPIECES) ((ox[i] >= 0 /\ ox[i] <= W-min_dx) /\ (oy[i] >= 0 /\ oy[i] <= H-min_dy));
+
+  constraint forall(i in NPIECES)(((dx[i] + ox[i]-1) <= W) /\ ((dy[i] + oy[i]-1) <= H));
 
   constraint
       forall(i in 1..n)(
@@ -30,3 +36,8 @@
   constraint
       lex_lesseq(array1d(box), [box[i,j] | i in reverse(1..W), j in 1..H])
       /\ lex_lesseq(array1d(box), [box[i,j] | i in 1..W, j in reverse(1..H)]);
+
+
+solve:: int_search(ox, first_fail, indomain)
+     :: int_search(oy, first_fail, indomain)
+     satisfy;
