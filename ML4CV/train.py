@@ -24,7 +24,7 @@ def cleanup():
     dist.destroy_process_group()
      
 
-def train(rank, world_size, args):
+def train(rank, world_size, args, transform):
     print(f"Running DDP on rank {rank}.")
     setup(rank, world_size)
     
