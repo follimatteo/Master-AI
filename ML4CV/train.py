@@ -14,6 +14,7 @@ import torch
 import torch.nn as nn
 import torch.distributed as dist 
 import torch.backends.cudnn as cudnn
+import torch.nn.functional as F
 import torchvision
 from torchvision import datasets, transforms
 from torchvision import models as torchvision_models
