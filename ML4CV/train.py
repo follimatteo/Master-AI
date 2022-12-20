@@ -3,6 +3,10 @@ import os
 import torch
 import torch.nn as nn
 import torch.distributed as dist 
+import torchvision
+import torch.backends.cudnn as cudnn
+
+import utils
 
 import vision_transformer as vits
 from vision_transformer import DINOHead
