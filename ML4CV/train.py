@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.distributed as dist 
 import torchvision
 import torch.backends.cudnn as cudnn
+from torchvision import datasets, transforms
 
 import utils
 
