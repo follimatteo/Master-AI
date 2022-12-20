@@ -29,6 +29,6 @@ class ARGS():
         self.output_dir = ''
         self.saveckp_freq = ''
         self.seed = 12
-        self.num_workers = 5
+        self.num_workers = 2
         self.dist_url = 'env://'
         self.local_rank = 0
