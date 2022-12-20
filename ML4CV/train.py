@@ -31,7 +31,7 @@ def setup(rank, world_size):
     os.environ['MASTER_PORT'] = '12355'
         
     dist.init_process_group(
-        'gloo',
+        'nccl',
         rank = rank,
         world_size = world_size
         )
